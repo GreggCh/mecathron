@@ -16,7 +16,7 @@ O sistema opera em um ciclo contínuo de **Sensoriamento -\> Decisão -\> Ação
 ```mermaid
 graph LR
     A[Câmera/Arena] -->|Imagem| B(Servidor de Visão)
-    B -->|JSON: Posição Global| C(Cliente Competidor)
+    B -->|JSON: Posição e Status| C(Cliente Competidor)
     C -->|JSON: Comandos Motor| D[Firmware ESP32]
     D -->|Movimento Físico| A
     D -.->|JSON: Telemetria| C
@@ -229,7 +229,7 @@ O sistema funciona em um ciclo contínuo de percepção e ação, onde o servido
 ```mermaid
 graph LR
     A[Câmera/Arena] -->|Imagem| B(Servidor de Visão)
-    B -->|JSON: Posição Global| C(Cliente Competidor)
+    B -->|JSON: Posição e Status| C(Cliente Competidor)
     C -->|JSON: Comandos Motor| D[Firmware ESP32]
     D -->|Movimento Físico| A
     D -.->|JSON: Telemetria| C

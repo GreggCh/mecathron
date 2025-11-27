@@ -1,291 +1,210 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mecathron 2025 - Cronograma Oficial</title>
-    <!-- Carrega o Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Carrega a biblioteca de ícones Lucide -->
-    <script src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
-    <style>
-        /* Fonte Inter */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* slate-900 */
-            color: #e2e8f0; /* slate-200 */
-        }
-        /* Estilo para o <details> (acordeão) */
-        details > summary {
-            cursor: pointer;
-            padding: 0.75rem 1rem;
-            background-color: #1e293b; /* slate-800 */
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        details > summary:hover {
-            background-color: #334155; /* slate-700 */
-        }
-        details[open] > summary {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        details > div {
-            padding: 1rem;
-            background-color: #1e293b; /* slate-800 */
-            border-bottom-left-radius: 0.5rem;
-            border-bottom-right-radius: 0.5rem;
-            border-top: 1px solid #334155; /* slate-700 */
-        }
-        details ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        details li {
-            position: relative;
-            padding-left: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-        details li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: #22c55e; /* green-500 */
-            font-weight: bold;
-        }
-        /* Estilo neon para o timer */
-        .neon-text {
-            color: #f0f9ff;
-            text-shadow:
-                0 0 7px #0ea5e9,
-                0 0 10px #0ea5e9,
-                0 0 21px #0ea5e9,
-                0 0 42px #0ea5e9;
-        }
-        .summary-icon {
-            transition: transform 0.2s;
-        }
-        details[open] .summary-icon {
-            transform: rotate(90deg);
-        }
-    </style>
-</head>
-<body class="p-4 md:p-8">
-    <div class="max-w-6xl mx-auto">
+# 🏎️ Pac-Man Arena: Sistema de Robótica em Malha Fechada
 
-        <!-- CABEÇALHO -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-black text-white mb-4">MECATHRON 2025</h1>
-            <p class="text-xl md:text-2xl text-sky-300 mb-6">Contagem Regressiva para o Grande Evento!</p>
-            
-            <!-- Contagem Regressiva -->
-            <div class="bg-slate-800 p-6 rounded-xl shadow-lg max-w-2xl mx-auto">
-                <div id="timer" class="flex justify-center space-x-4 md:space-x-8 text-center">
-                    <div>
-                        <div id="days" class="text-4xl md:text-6xl font-bold neon-text">00</div>
-                        <div class="text-sm text-slate-400 uppercase">Dias</div>
-                    </div>
-                    <div>
-                        <div id="hours" class="text-4xl md:text-6xl font-bold neon-text">00</div>
-                        <div class="text-sm text-slate-400 uppercase">Horas</div>
-                    </div>
-                    <div>
-                        <div id="minutes" class="text-4xl md:text-6xl font-bold neon-text">00</div>
-                        <div class="text-sm text-slate-400 uppercase">Minutos</div>
-                    </div>
-                    <div>
-                        <div id="seconds" class="text-4xl md:text-6xl font-bold neon-text">00</div>
-                        <div class="text-sm text-slate-400 uppercase">Segundos</div>
-                    </div>
-                </div>
-            </div>
-            <p class="text-sm text-slate-500 mt-4">Evento: 29 de Novembro de 2025</p>
-        </header>
+Este projeto implementa um sistema de controle robótico distribuído para um jogo de arena real. A arquitetura baseia-se em um ciclo de **Malha Fechada Visual**, onde a posição dos robôs é detectada externamente, processada por um cliente competidor e convertida em comandos de atuação para o robô.
 
-        <!-- OS DESAFIOS E EQUIPES -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">Nossos Desafios & Equipes</h2>
-            <div class="grid md:grid-cols-2 gap-6">
+## 1\. 🔄 Arquitetura do Sistema
 
-                <!-- Card Pac-Man -->
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg border border-yellow-400/50">
-                    <h3 class="text-3xl font-bold text-yellow-300 mb-4">Desafio: PAC-MAN</h3>
-                    <div class="space-y-3 text-slate-300">
-                        <p><strong>Servidor do Jogo:</strong> Prof. Gregory + 2 estudantes</p>
-                        <p><strong>Montagem dos Carros:</strong> Prof. Cassiano + 12 estudantes (2 por carro + 1 reserva)</p>
-                        <p><strong>Montagem da Arena:</strong> Prof. Cassiano + 6 estudantes</p>
-                        <p><strong>Divulgação:</strong> Prof. Gregory + 2 estudantes</p>
-                        <p><strong>Documentação (Carros/Arena):</strong> Prof. Cassiano + Equipe de Montagem</p>
-                        <p><strong>Documentação (Servidor):</strong> Prof. Gregory + Equipe de Programação</p>
-                    </div>
-                </div>
+O sistema opera em um ciclo contínuo de **Sensoriamento -\> Decisão -\> Ação**:
 
-                <!-- Card Rocket League -->
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg border border-cyan-400/50">
-                    <h3 class="text-3xl font-bold text-cyan-300 mb-4">Desafio: ROCKET LEAGUE</h3>
-                    <div class="space-y-3 text-slate-300">
-                        <p><strong>Servidor do Jogo:</strong> Prof. Gregory + 2 estudantes</p>
-                        <p><strong>Montagem dos Carros (4):</strong> Prof. Cassiano + 6 estudantes (2 por carro + 1 reserva)</p>
-                        <p><strong>Montagem da Arena:</strong> Prof. Cassiano + 2 estudantes</p>
-                        <p><strong>Divulgação:</strong> Prof. Gregory + 2 estudantes</p>
-                        <p><strong>Documentação (Carros/Arena):</strong> Prof. Cassiano + Equipe de Montagem</p>
-                        <p><strong>Documentação (Servidor):</strong> Prof. Gregory + Equipe de Programação</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+1.  **Sensoriamento (Servidor de Visão):** Uma câmera capta a arena. O servidor processa a imagem, identifica os robôs e calcula suas coordenadas globais.
+2.  **Decisão (Cliente Competidor):** O software do competidor recebe essas coordenadas via WebSocket. Ele compara a posição atual com o objetivo (estratégia de jogo) e calcula a correção necessária.
+3.  **Ação (Firmware do Robô):** O cliente envia comandos de velocidade para o robô via WebSocket. O firmware recebe o comando e aciona os motores.
+4.  **Feedback (Malha Fechada):** O robô se move, a câmera detecta a nova posição, e o ciclo se repete.
 
-        <!-- CRONOGRAMA SEMANAL -->
-        <section>
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">Plano de 4 Semanas</h2>
-            <div class="space-y-6">
+### Fluxo de Dados
 
-                <!-- Semana 1 -->
-                <div class="bg-slate-800/50 p-5 rounded-lg border border-slate-700">
-                    <h3 class="text-2xl font-bold text-white mb-4">Semana 1 (05/11 - 11/11): Ignição! <span class="text-lg font-normal text-slate-400 ml-2">Começa HOJE!</span></h3>
-                    <p class="mb-4 text-slate-300">Foco principal: Tirar os robôs do papel e definir a arquitetura dos servidores. Vamos construir!</p>
-                    <details>
-                        <summary>
-                            <span>Atividades Detalhadas da Semana 1</span>
-                            <svg class="lucide lucide-chevron-right summary-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                        </summary>
-                        <div class="mt-2">
-                            <ul>
-                                <li><strong>[Carros]</strong> Organização dos kits (chassis, motores, sensores, MCUs) e início da montagem mecânica.</li>
-                                <li><strong>[Servidor]</strong> Definição das regras de jogo (pontuação, tempo, power-ups), setup dos repositórios (GitHub) e design da API/protocolo de comunicação (Wi-Fi/Bluetooth).</li>
-                                <li><strong>[Arena]</strong> Design final das arenas (dimensões, materiais) e lista de compras.</li>
-                                <li><strong>[Mídia]</strong> Brainstorm e roteiro para o primeiro vídeo (Teaser para Python Floripa).</li>
-                                <li><strong>[Documentação]</strong> Criar a estrutura da documentação e iniciar o registro fotográfico do processo.</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
+```mermaid
+graph LR
+    A[Câmera/Arena] -->|Imagem| B(Servidor de Visão)
+    B -->|JSON: Posição Global| C(Cliente Competidor)
+    C -->|JSON: Comandos Motor| D[Firmware ESP32]
+    D -->|Movimento Físico| A
+    D -.->|JSON: Telemetria| C
+```
 
-                <!-- Semana 2 -->
-                <div class="bg-slate-800/50 p-5 rounded-lg border border-slate-700">
-                    <h3 class="text-2xl font-bold text-white mb-4">Semana 2 (12/11 - 18/11): Protocolos!</h3>
-                    <p class="mb-4 text-slate-300">Foco: Robôs 100% montados e com firmware básico. Servidores com lógica inicial. Arenas em construção.</p>
-                    <div class="p-3 bg-sky-900/50 rounded-lg mb-4 border border-sky-600">
-                        <span class="font-bold text-sky-200">MILESTONE (14/11):</span> Publicação da primeira versão da documentação para a comunidade Python Floripa!
-                    </div>
-                    <details>
-                        <summary>
-                            <span>Atividades Detalhadas da Semana 2</span>
-                            <svg class="lucide lucide-chevron-right summary-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                        </summary>
-                        <div class="mt-2">
-                            <ul>
-                                <li><strong>[Carros]</strong> Finalização da montagem eletrônica (solda, conexões) e desenvolvimento do firmware básico (controle de motores, leitura de sensores).</li>
-                                <li><strong>[Carros]</strong> Testes individuais de movimentação ("O robô anda reto?").</li>
-                                <li><strong>[Servidor]</strong> Implementação da lógica de jogo central (pontuação, timer) e primeiros testes de comunicação Carro <-> Servidor.</li>
-                                <li><strong>[Arena]</strong> Aquisição de materiais e início da construção da estrutura base (piso, paredes).</li>
-                                <li><strong>[Mídia]</strong> Gravação, edição e publicação do Vídeo 1 (Teaser).</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
+-----
 
-                <!-- Semana 3 -->
-                <div class="bg-slate-800/50 p-5 rounded-lg border border-slate-700">
-                    <h3 class="text-2xl font-bold text-white mb-4">Semana 3 (19/11 - 25/11): Integração Total!</h3>
-                    <p class="mb-4 text-slate-300">Foco: O momento da verdade! Testar os robôs, servidores e arenas juntos. O jogo funciona?</p>
-                    <div class="p-3 bg-sky-900/50 rounded-lg mb-4 border border-sky-600">
-                        <span class="font-bold text-sky-200">MILESTONE (21/11):</span> Publicação do vídeo Teaser do evento.
-                    </div>
-                    <details>
-                        <summary>
-                            <span>Atividades Detalhadas da Semana 3</span>
-                            <svg class="lucide lucide-chevron-right summary-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                        </summary>
-                        <div class="mt-2">
-                            <ul>
-                                <li><strong>[Jogo]</strong> Primeiros testes completos dos robôs nas arenas (calibração, ajustes de sensores).</li>
-                                <li><strong>[Servidor]</strong> Desenvolvimento do Dashboard/Placar ao vivo e refinamento da lógica de jogo com base nos testes reais.</li>
-                                <li><strong>[Arena]</strong> Finalização dos elementos de jogo (gols do Rocket League, "pills" e linhas do Pac-Man, pintura).</li>
-                                <li><strong>[Mídia]</strong> Produção e publicação do Vídeo 2 (Regras).</li>
-                                <li><strong>[Documentação]</strong> Escrever os guias de uso e diagramas técnicos.</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
+## 2\. 📂 Descrição dos Componentes
 
-                <!-- Semana 4 -->
-                <div class="bg-slate-800/50 p-5 rounded-lg border border-slate-700">
-                    <h3 class="text-2xl font-bold text-white mb-4">Semana 4 (26/11 - 29/11): Reta Final!</h3>
-                    <p class="mb-4 text-slate-300">Foco: Correção de últimos bugs, "stress tests" e preparação para o grande dia.</p>
-                    <div class="grid sm:grid-cols-2 gap-4 mb-4">
-                        <div class="p-3 bg-green-900/50 rounded-lg border border-green-600">
-                            <span class="font-bold text-green-200">MILESTONE (28/11):</span> Evento de Lançamento (pré-evento Mecathron).
-                        </div>
-                        <div class="p-3 bg-red-900/50 rounded-lg border border-red-600">
-                            <span class="font-bold text-red-200">EVENTO (29/11):</span> O GRANDE DIA - MECATHRON!
-                        </div>
-                    </div>
-                    <details>
-                        <summary>
-                            <span>Atividades Detalhadas da Semana 4</span>
-                            <svg class="lucide lucide-chevron-right summary-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                        </summary>
-                        <div class="mt-2">
-                            <ul>
-                                <li><strong>[Jogo]</strong> Simulações de partidas completas ("Game Day" de testes) e correção intensiva de bugs.</li>
-                                <li><strong>[Servidor]</strong> Testes de carga (todos os robôs conectados ao mesmo tempo) e "Code Freeze" (sem novas features, só bugs).</li>
-                                <li><strong>[Carros]</strong> Carregamento de baterias, verificação de peças de reserva, ajustes finos de performance.</li>
-                                <li><strong>[Mídia]</strong> Preparativos para a apresentação e cobertura do evento (fotos, vídeos).</li>
-                                <li><strong>[Documentação]</strong> Finalização e revisão de toda a documentação técnica (Carros, Arena, Servidor).</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
+### A. O Sensor Global: `car_detector_ws.py`
 
-            </div>
-        </section>
+Este é o "olho" e o juiz do sistema.
 
-        <!-- Rodapé -->
-        <footer class="text-center mt-12 text-slate-500 text-sm">
-            <p>Um projeto dos Professores Gregory e Cassiano com seus estudantes.</p>
-            <p>Rumo ao Mecathron 2025!</p>
-        </footer>
+  * **Função:** Captura imagens da câmera, detecta as cores dos robôs (Pac-Man e Fantasmas) e gerencia as regras do jogo (pontuação, colisões, *power-ups*).
+  * **Saída:** Transmite via WebSocket (Porta 8765) um JSON contendo o `estado_jogo` e a lista de `objetos` com suas coordenadas globais (x, y) e ângulo.
 
-    </div>
+### B. O Controlador: `client_pacman_control.py`
 
-    <!-- Script da Contagem Regressiva -->
-    <script>
-        // Define a data final do evento (29 de Novembro de 2025, 09:00, Horário de Brasília)
-        // Estamos em 05/11/2025, então a data é futura.
-        const deadline = new Date("2025-11-29T09:00:00-03:00").getTime();
+Este é o "cérebro" da equipe.
 
-        const timerInterval = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = deadline - now;
+  * **Conexão Dupla:**
+      * *Escuta* o Servidor de Visão para saber onde está (`ws://ip_servidor:8765`).
+      * *Fala* com o Firmware do Robô para enviar comandos (`ws://ip_robo:81`).
+  * **Lógica:** Implementa o algoritmo de controle (ex: PID ou Lógica Fuzzy). Ele calcula o erro entre a posição atual (vinda da visão) e o alvo, gerando comandos de velocidade para os motores esquerdo e direito.
 
-            // Cálculos
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+### C. O Atuador: `esp32_websocket.ino`
 
-            // Formata para ter sempre dois dígitos
-            const format = (num) => String(num).padStart(2, '0');
+Este é o firmware embarcado no ESP32 do robô.
 
-            // Atualiza o HTML
-            document.getElementById("days").innerText = format(days);
-            document.getElementById("hours").innerText = format(hours);
-            document.getElementById("minutes").innerText = format(minutes);
-            document.getElementById("seconds").innerText = format(seconds);
+  * [cite\_start]**Servidor WebSocket:** O robô age como um servidor na porta **81**, aguardando a conexão do cliente[cite: 5].
+  * **Segurança de Conexão:** Implementa um filtro de IP para garantir que apenas o computador autorizado controle o robô. [cite\_start]Ele aceita um IP Fixo definido ou o primeiro IP dinâmico que se conectar, bloqueando intrusos [cite: 2, 21-28].
+  * [cite\_start]**Hardware:** Controla a Ponte H dos motores e lê sensores (ultrassônico e infravermelho) [cite: 11-12, 38-41].
+  * [cite\_start]**Telemetria:** Envia de volta para o cliente dados locais que a câmera não vê, como distância de obstáculos à frente [cite: 42-43].
 
-            // Se o tempo acabar
-            if (distance < 0) {
-                clearInterval(timerInterval);
-                document.getElementById("timer").innerHTML = "<div class='text-4xl font-bold text-green-400'>O EVENTO COMEÇOU!</div>";
-            }
-        }, 1000);
-    </script>
-</body>
-</html>
+-----
+
+## 3\. 📡 Protocolos de Comunicação (WebSocket - JSON)
+
+### 1\. Visão -\> Cliente (Estado do Jogo)
+
+Este pacote JSON é gerado pelo servidor de visão e consumido pelo cliente para duas funções: **renderizar a interface gráfica** e **calcular a lógica de controle** dos robôs.
+
+Ele é dividido em três seções principais:
+
+#### 1. `objetos` (Rastreamento Visual)
+Lista contendo a posição e orientação de cada entidade (robô) detectada na arena.
+* **`personagem`**: Identificador único do robô (ex: `"pac-man"`, `"fantasma_4"`). O cliente usa isso para saber qual robô ele deve controlar.
+* **`x_global` / `y_global`**: Coordenadas absolutas (em pixels) do robô na imagem completa da câmera. Estas são as coordenadas usadas pelo cliente para calcular distâncias e desenhar na tela.
+* **`x_arena` / `y_arena`**: Coordenadas relativas à área de recorte (ROI - Region of Interest). Úteis para depuração da visão computacional.
+* **`angulo_graus`**: A orientação da frente do robô (0 a 360 graus). Essencial para o algoritmo de navegação saber para onde o robô está apontando antes de girar.
+
+#### 2. `estado_jogo` (Regras e Status)
+Variáveis globais que definem o comportamento da partida. O cliente usa isso para decidir, por exemplo, se deve fugir ou perseguir.
+* **`paused`**: (`true`/`false`) Se verdadeiro, o jogo está parado (início ou pós-colisão). O cliente deve enviar velocidade zero para os motores.
+* **`power_active`**: (`true`/`false`) Indica se o Pac-Man comeu uma "Power Pellet".
+    * *Se `true`:* Pac-Man persegue, Fantasmas fogem.
+    * *Se `false`:* Pac-Man foge, Fantasmas perseguem.
+* **`time_remaining`**: Tempo restante da partida em segundos. Se chegar a zero, `game_over` torna-se `true`.
+* **`lives`**: Quantidade de vidas restantes do Pac-Man.
+* **`score`**: Pontuação atual acumulada.
+* **`immunity`**: (`true`/`false`) Período temporário onde colisões são ignoradas (geralmente após um reset de posição).
+
+#### 3. `coletas` (Itens da Arena)
+Mapeamento de todos os "gatilhos" virtuais desenhados na arena e seu estado atual.
+* O objeto é dividido em categorias: `power` (Super Força), `speed` (Velocidade) e `score` (Pontos).
+* Cada chave (ex: `"score_1"`) possui um valor booleano:
+    * **`false`**: O item está disponível na arena (o cliente desenha o item).
+    * **`true`**: O item já foi coletado por um jogador (o cliente esconde o item e o servidor ignora novas passagens por ali).
+
+#### Exemplo de uma mensagem JSON enviada pelo Servidor
+
+```json
+{
+   "objetos":[
+      {
+         "personagem":"pac-man",
+         "x_arena":47,
+         "y_arena":155,
+         "angulo_graus":78.62,
+         "x_global":486,
+         "y_global":424
+      },
+      {
+         "personagem":"fantasma_1",
+         "x_arena":370,
+         "y_arena":105,
+         "angulo_graus":63.29,
+         "x_global":809,
+         "y_global":374
+      },
+      {
+         "personagem":"fantasma_2",
+         "x_arena":370,
+         "y_arena":105,
+         "angulo_graus":63.29,
+         "x_global":809,
+         "y_global":374
+      },
+      {
+         "personagem":"fantasma_3",
+         "x_arena":370,
+         "y_arena":105,
+         "angulo_graus":63.29,
+         "x_global":809,
+         "y_global":374
+      },
+      {
+         "personagem":"fantasma_4",
+         "x_arena":370,
+         "y_arena":105,
+         "angulo_graus":63.29,
+         "x_global":809,
+         "y_global":374
+      }
+   ],
+   "estado_jogo":{
+      "paused":false,
+      "game_over":false,
+      "time_remaining":174.5,
+      "lives":3,
+      "score":10,
+      "power_active":false,
+      "speed_active":false,
+      "power_timer":0.0,
+      "speed_timer":0.0,
+      "immunity":false
+   },
+   "coletas":{
+      "power":{
+         "power_1":true,
+         "power_2":false,
+         "power_3":false,
+         "power_4":false
+      },
+      "speed":{
+         "speed_boost_1":false,
+         "speed_boost_2":false,
+         "speed_boost_3":true,
+         "speed_boost_4":false
+      },
+      "score":{
+         "score_1":false,
+         "score_2":true,
+         "score_3":false,
+         "score_4":false,
+         "score_5":false,
+         "score_6":false,
+         "score_7":false,
+         "score_8":false
+      }
+   }
+}
+```
+
+### 2\. Cliente -\> Firmware (Comando de Ação)
+
+O cliente envia os valores de PWM (0 a 255) para os motores. [cite\_start]O firmware recebe este JSON e ajusta a potência das rodas [cite: 31-33].
+
+```json
+{
+  "motor1_vel": 200,   // Velocidade Motor Esquerdo (-150 a 150 com SPEED BOOD = False e -255 a 255 com SPEED BOOST = True)
+  "motor2_vel": -180   // Velocidade Motor Direito (-150 a 150 com SPEED BOOD = False e -255 a 255 com SPEED BOOST = True)
+}
+```
+
+### 3\. Firmware -\> Cliente (Telemetria)
+
+O robô retorna a confirmação do valor configurado em cada motor. Serve como confirmação que o valor enviado foi configurado. O robô poderá enviar outros dados, como valores de sensores, mas estes devem ser IGNORADOS, pois nesta versão do Hackathon não foi possível implementar estas funcionalidades.
+
+```json
+{
+  "motor1": { "vel": 200 },
+  "motor2": { "vel": -180 },
+  "presenca": {
+    "esq": 1,    //IGNORAR
+    "dir": 0,    //IGNORAR
+    "tras": 1    //IGNORAR
+  },
+  "distancia_cm": 15.5  // IGNORAR
+}
+```
+
+-----
+
+## 4\. 🔧 Configuração e Segurança do Robô
+
+O firmware (`esp32_websocket.ino`) possui recursos avançados para competição:
+
+  * **Filtro de IP:** O sistema foi projetado para evitar sequestro de robôs. [cite\_start]Ele permite conexão apenas de um IP Fixo configurado (`FIXED_IP_CONFIG`) [cite: 2] [cite\_start]ou do primeiro cliente que ocupar o "Slot Dinâmico"[cite: 3].
+  * [cite\_start]**Persistência:** Parâmetros de calibração dos motores (ganho e offset) são salvos na memória não volátil (Preferences), permitindo ajuste fino sem reprogramar [cite: 29-30].
+  * [cite\_start]**Calibração:** O firmware aplica matematicamente ganhos e offsets aos comandos recebidos para corrigir diferenças físicas entre os motores antes de aplicar a energia [cite: 36-37].

@@ -4,7 +4,7 @@ import json
 import sys
 
 # --- CONFIGURAÇÕES DE CONEXÃO (Devem corresponder ao servidor) ---
-WEBSOCKET_URI = "ws://localhost:8765"
+WEBSOCKET_URI = "ws://192.168.1.101:8765"
 
 # ----------------------------------------------------------------------
 # 1. Função Assíncrona para o Cliente WebSocket
@@ -29,14 +29,31 @@ async def websocket_client():
                 message = await websocket.recv()
                 
                 try:
-                    # Deserializa a string JSON para um objeto Python (lista de dicionários)
+                    # Deserializa a string JSON
                     data = json.loads(message)
                     
-                    # Processa e imprime os dados
+                    # --- NOVO PROCESSO DE LEITURA ---
+                    
+                    # O dado principal agora é um dicionário que contém "objetos" e "estado_jogo"
+                    objetos = data.get('objetos', [])
+                    estado_jogo = data.get('estado_jogo', {})
+                    
                     print(f"\n[RECEIVED] Timestamp: {asyncio.get_event_loop().time():.2f}")
                     
-                    if isinstance(data, list) and data:
-                        for item in data:
+                    # 1. PROCESSA ESTADO DO JOGO
+                    power_active = estado_jogo.get('power_active', False)
+                    speed_active = estado_jogo.get('speed_active', False)
+                    power_time = estado_jogo.get('power_remaining_time', 0)
+                    speed_time = estado_jogo.get('speed_remaining_time', 0)
+
+                    print(f"## ESTADO DO JOGO ##")
+                    print(f"  - POWER ACTIVE (Caçador): {power_active} ({power_time:.1f}s restantes)")
+                    print(f"  - SPEED ACTIVE (Boost): {speed_active} ({speed_time:.1f}s restantes)")
+                    
+                    # 2. PROCESSA DADOS DE POSIÇÃO DOS PERSONAGENS
+                    if isinstance(objetos, list) and objetos:
+                        print(f"## DADOS DE POSIÇÃO ({len(objetos)} objetos) ##")
+                        for item in objetos:
                             personagem = item.get('personagem', 'DESCONHECIDO')
                             x = item.get('x_global', 'N/A')
                             y = item.get('y_global', 'N/A')
@@ -46,7 +63,7 @@ async def websocket_client():
                             print(f"    - Posição (Global X, Y): ({x}, {y})")
                             print(f"    - Ângulo (Graus): {angulo}")
                     else:
-                        print("  Dados recebidos vazios ou em formato inesperado.")
+                        print("  Dados de objetos vazios.")
                         
                 except json.JSONDecodeError:
                     print(f"[ERROR] Mensagem JSON inválida recebida: {message[:50]}...")
@@ -55,7 +72,7 @@ async def websocket_client():
 
     except ConnectionRefusedError:
         print(f"\n[FATAL] Conexão recusada. O servidor não está rodando em {WEBSOCKET_URI} ou a porta está bloqueada.")
-        print("Verifique se o 'main_detection.py' está em execução.")
+        print("Verifique se o 'mecathron_server.py' está em execução.")
     except websockets.exceptions.ConnectionClosedOK:
         print("\n[INFO] Conexão encerrada pelo servidor (OK).")
     except websockets.exceptions.ConnectionClosedError as e:

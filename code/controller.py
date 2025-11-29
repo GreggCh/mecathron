@@ -176,7 +176,7 @@ def main():
             # 3. Identificar Entidades
             eu = next((o for o in objetos if o['personagem'] == MEU_PERSONAGEM), None)
             # Alvo: Tenta achar 'bola' ou 'fantasma' (genérico)
-            alvo = next((o for o in objetos if 'bola' in o['personagem'] or 'fantasma' in o['personagem']), None)
+            alvo = next((o for o in objetos if 'bola' in o['personagem'] or 'pac-man' in o['personagem']), None)
 
             if eu and alvo:
                 # --- LÓGICA DE DESTRAVAMENTO ---
@@ -255,4 +255,5 @@ def main():
 
 if __name__ == "__main__":
     try: main()
+
     except KeyboardInterrupt: pass

@@ -1,13 +1,14 @@
-Servidor pac-man = 192.168.1.101
+Servidor pac-man = 192.168.1.101:8765
 
-Pac-man = 192.168.1.116
-Fantasma azul (fantasta_1) = 192.168.1.119
-Fantasma rosa (fantasma_2) = 192.168.1.117
-Fantasma vermelho (fantasma_3) = 192.168.1.118
-Fantasma verde (fantasma_4) = 192.168.1.120
+Pac-man (pac-man) = 192.168.1.116:81
+Fantasma azul (fantasta_1) = 192.168.1.119:81
+Fantasma rosa (fantasma_2) = 192.168.1.117:81
+Fantasma vermelho (fantasma_3) = 192.168.1.118:81
+Fantasma verde (fantasma_4) = 192.168.1.120:81
 
-Servidor rocket league = 192.168.1.106
+Servidor rocket league = 192.168.1.106:8765
 
-Carro rosa (carro_1) = 192.168.1.121
-Carro azul (carro_2) = 192.168.1.122
+Carro rosa (carro_1) = 192.168.1.121:81
+Carro azul (carro_2) = 192.168.1.122:81
 
+OS NOMES ENTRE PARÊNTESES SÃO OS NOMES QUE SÃO ENVIADOS PELOS SERVIDORES E IDENTIFICAM CADA ROBÔ

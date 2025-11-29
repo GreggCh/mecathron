@@ -1,8 +1,13 @@
 Servidor pac-man = 192.168.1.101
 
 Pac-man = 192.168.1.116
-Fantasma rosa (fantasma_x) = 192.168.1.117
-Fantasma azul (fantasta_x) = 192.168.1.119
-Fantasma verde (fantasma_x) = 192.168.1.120
+Fantasma azul (fantasta_1) = 192.168.1.119
+Fantasma rosa (fantasma_2) = 192.168.1.117
+Fantasma vermelho (fantasma_3) = 192.168.1.118
+Fantasma verde (fantasma_4) = 192.168.1.120
 
 Servidor rocket league = 192.168.1.106
+
+Carro rosa (carro_1) = 192.168.1.121
+Carro azul (carro_2) = 192.168.1.122
+
